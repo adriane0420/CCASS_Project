@@ -1,0 +1,72 @@
+{% extends "homepage/base.html" %}
+
+{% block content %}
+<h1>My Warehouse Account</h1>
+
+<!-- ================= PALLET STORAGE TABLE ================= -->
+<h2>Current Pallet Storage</h2>
+
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Date Stored</th>
+            <th>Number of Pallets</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for storage in storages %}
+            <tr>
+                <td>{{ storage.date_stored }}</td>
+                <td>{{ storage.pallet_count }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="2">No pallets stored yet.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Total Pallets in Storage: {{ total_pallets }}</h3>
+
+<hr>
+
+<!-- ================= TRANSACTION HISTORY TABLE ================= -->
+<h2>Transaction History</h2>
+
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Transaction Type</th>
+            <th>Pallets Purchased</th>
+            <th>Price per Pallet</th>
+            <th>Total Price</th>
+            <th>Processed By</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for txn in transactions %}
+            <tr>
+                <td>{{ txn.transaction_date|date:"Y-m-d H:i" }}</td>
+                <td>{{ txn.transaction_type|title }}</td>
+                <td>{{ txn.pallets_purchased }}</td>
+                <td>{{ txn.price_per_pallet }}</td>
+                <td>{{ txn.total_price }}</td>
+                <td>
+                    {% if txn.employee %}
+                        {{ txn.employee.username }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="5">No transactions found.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

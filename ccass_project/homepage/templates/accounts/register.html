@@ -1,0 +1,105 @@
+<!-- homepage/templates/accounts/register.html -->
+{% extends "homepage/base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 95vh;">
+    <div class="col-md-7 col-lg-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+
+                <!-- Header -->
+                <h3 class="text-center mb-2">Create Account</h3>
+                <p class="text-center text-muted mb-4">Tell us a bit about yourself</p>
+
+                <form method="POST" novalidate>
+                    {% csrf_token %}
+
+                    <!-- First + Last Name -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">First Name</label>
+                            {{ form.first_name|add_class:"form-control" }}
+                            <div class="text-danger small">{{ form.first_name.errors }}</div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Last Name</label>
+                            {{ form.last_name|add_class:"form-control" }}
+                            <div class="text-danger small">{{ form.last_name.errors }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Username + Email -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Username</label>
+                            {{ form.username|add_class:"form-control" }}
+                            <div class="text-danger small">{{ form.username.errors }}</div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email</label>
+                            {{ form.email|add_class:"form-control" }}
+                            <div class="text-danger small">{{ form.email.errors }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="mb-3">
+                        <label class="form-label">Phone Number</label>
+                        {{ form.phone_number|add_class:"form-control" }}
+                        <div class="text-danger small">{{ form.phone_number.errors }}</div>
+                    </div>
+
+                    <!-- Site -->
+                    <div class="mb-3">
+                        <label class="form-label">Site</label>
+                        {{ form.site|add_class:"form-select" }}
+                        <div class="text-danger small">{{ form.site.errors }}</div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="mb-3">
+                        <label class="form-label">Address</label>
+                        {{ form.address|add_class:"form-control" }}
+                        <div class="text-danger small">{{ form.address.errors }}</div>
+                    </div>
+
+                    <!-- Passwords -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Password</label>
+                            {{ form.password1|add_class:"form-control" }}
+                            <div class="form-text">At least 8 characters</div>
+                            <div class="text-danger small">{{ form.password1.errors }}</div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Confirm Password</label>
+                            {{ form.password2|add_class:"form-control" }}
+                            <div class="text-danger small">{{ form.password2.errors }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="d-grid mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            Create Account
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Login -->
+                <div class="text-center mt-4">
+                    <small class="text-muted">
+                        Already have an account?
+                        <a href="{% url 'login' %}">Login</a>
+                    </small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

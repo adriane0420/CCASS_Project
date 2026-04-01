@@ -1,0 +1,122 @@
+{% extends "homepage/base.html" %}
+{% block content %}
+
+<h2>Complete Payment</h2>
+
+<div style="border:1px solid #ccc; padding:15px; margin-bottom:20px;">
+    <h3>Payment Breakdown</h3>
+
+    <h3>Payment Breakdown</h3>
+
+<p><strong>Transaction Type:</strong> {{ breakdown.transaction_type }}</p>
+<p><strong>Total Pallets:</strong> {{ breakdown.pallet_count }}</p>
+
+{% if breakdown.transaction_type == "Withdraw Pallets" %}
+<p> Handling Out Fee: ₱75</p>
+<p> Storage Fee: ₱70 per day</p>
+
+{% elif breakdown.transaction_type == "Deposit Pallets" %}
+<p> Handling In Fee: ₱75</p>
+{% endif %}
+
+<p><strong>Computation:</strong></p>
+{% for line in breakdown.formula_lines %}
+    <p>{{ line }}</p>
+{% endfor %}
+
+<p><strong>Total Amount:</strong> ₱{{ breakdown.total }}</p>
+
+</div>
+
+<p><strong>Amount to Pay:</strong> ₱{{ amount }}</p>
+
+<div style="max-width: 400px;">
+    <input id="card-number" placeholder="Card Number" style="width:100%; margin-bottom:8px;">
+    <input id="exp-month" placeholder="MM" style="width:48%; margin-bottom:8px;">
+    <input id="exp-year" placeholder="YYYY" style="width:48%; margin-bottom:8px; float:right;">
+    <input id="cvc" placeholder="CVC" style="width:100%; margin-bottom:8px;">
+</div>
+
+<button id="pay-btn">Pay Now</button>
+<p id="payment-status" style="color:red; margin-top:10px;"></p>
+
+<script src="https://js.paymongo.com/v1/paymongo.js"></script>
+
+<script>
+const paymongo = Paymongo("{{ public_key }}");
+
+document.getElementById("pay-btn").addEventListener("click", async () => {
+    const statusEl = document.getElementById("payment-status");
+    statusEl.innerText = "Processing payment...";
+
+    try {
+        const cardNumber = document.getElementById("card-number").value.trim();
+        const expMonth = parseInt(document.getElementById("exp-month").value, 10);
+        const expYear = parseInt(document.getElementById("exp-year").value, 10);
+        const cvc = document.getElementById("cvc").value.trim();
+
+        if (!cardNumber || !expMonth || !expYear || !cvc) {
+            statusEl.innerText = "Please complete all card fields.";
+            return;
+        }
+
+        const result = await paymongo.createPaymentMethod({
+            type: "card",
+            details: {
+                card_number: cardNumber,
+                exp_month: expMonth,
+                exp_year: expYear,
+                cvc: cvc
+            },
+            billing_details: {
+                name: "{{ request.user.get_full_name|default:'Test User' }}",
+                email: "{{ request.user.email }}"
+            }
+        });
+
+        // DEBUG (remove later)
+        console.log("PayMongo result:", result);
+
+        // Handle PayMongo errors
+        if (result.errors && result.errors.length) {
+            statusEl.innerText = result.errors[0].detail;
+            return;
+        }
+
+        // SAFE access
+        if (!result.id) {
+            statusEl.innerText = "Payment method was not created.";
+            return;
+        }
+
+        const paymentMethodId = result.id;
+
+        // Send to backend
+        const response = await fetch("{% url 'confirm-payment' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({
+                payment_method_id: paymentMethodId
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.status === "success") {
+            window.location.href = "{% url 'client_dashboard' %}";
+        } else {
+            statusEl.innerText = data.error || "Payment failed.";
+        }
+
+    } catch (err) {
+        console.error("JS ERROR:", err);
+        statusEl.innerText = "Unexpected error occurred.";
+    }
+});
+</script>
+
+
+{% endblock %}

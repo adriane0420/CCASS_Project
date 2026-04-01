@@ -1,0 +1,47 @@
+{% extends "homepage/base.html" %}
+
+{% block content %}
+
+<h1>Transaction History</h1>
+
+<form method="get">
+    <input type="text" name="client" placeholder="Search client username">
+
+    <input type="date" name="start_date">
+    <input type="date" name="end_date">
+
+    <select name="site">
+        <option value="">All Sites</option>
+        <option value="caloocan">Caloocan</option>
+        <option value="taguig">Taguig</option>
+    </select>
+
+    <button type="submit">Filter</button>
+</form>
+
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Client</th>
+    <th>Site</th>
+    <!--<th>Employee</th>-->
+    <th>Type</th>
+    <th>Pallets</th>
+    <th>Total Price</th>
+    <th>Date</th>
+  </tr>
+
+  {% for t in transactions %}
+  <tr>
+    <td>{{ t.id }}</td>
+    <td>{{ t.client.username }}</td>
+    <td>{{ t.client.site|title }}</td>
+    <!--<td>{{ t.employee.username|default:"—" }}</td>-->
+    <td>{{ t.transaction_type }}</td>
+    <td>{{ t.pallets_purchased }}</td>
+    <td>{{ t.total_price }}</td>
+    <td>{{ t.transaction_date }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

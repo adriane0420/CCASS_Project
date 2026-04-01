@@ -1,0 +1,87 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+  <div class="container-fluid">
+    
+    <a class="navbar-brand" href="#"><img src="{% static 'resource/navbar_logo.png' %}" id="navbar_logo"></a>
+
+    <!-- Toggle button for mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+        {% if user.is_authenticated %}
+            {% if user.role == 'client' %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'home' %}">Home</a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'client_dashboard' %}">My Storage</a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'pallet-transaction' %}">New Transaction</a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'edit_account' %}">Edit Account</a>
+                </li>
+
+            {% else %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'employee_dashboard' %}">Home</a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'employee_transactions' %}">View All Transactions</a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'manage_products' %}">Manage Product</a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'add_employee' %}">Add Employee</a>
+                </li>
+            {% endif %}
+        {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'register' %}">Register</a>
+            </li>
+        {% endif %}
+
+      </ul>
+
+      <!-- Right side (user + logout) -->
+      <ul class="navbar-nav ms-auto">
+
+        {% if user.is_authenticated %}
+            <li class="nav-item">
+              <span class="navbar-text me-3">
+                Welcome, {{ user.first_name }}
+              </span>
+            </li>
+
+            <li class="nav-item">
+              <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="btn btn-outline-danger btn-sm" type="submit">
+                  Logout
+                </button>
+              </form>
+            </li>
+        {% endif %}
+
+      </ul>
+
+    </div>
+  </div>
+</nav>

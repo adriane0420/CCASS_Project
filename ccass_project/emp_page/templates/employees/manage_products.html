@@ -1,0 +1,73 @@
+{% extends "homepage/base.html" %}
+
+{% block content %}
+
+<h1>Manage Pricing</h1>
+
+{% if messages %}
+    {% for message in messages %}
+        <p style="color:green">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<table border="1" cellpadding="8">
+    <tr>
+        <th>Service</th>
+        <th>Price (₱)</th>
+        <th>Last update</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for product in products %}
+    <tr>
+        <form method="post">
+            {% csrf_token %}
+
+            <td>
+                {{ product.name }}
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+            </td>
+
+            <td>
+                <input type="number"
+                       step="0.01"
+                       name="price"
+                       value="{{ product.price }}"
+                       required>
+            </td>
+
+            <td>
+                {{ product.updated_at }}
+            </td>
+
+            <td>
+                <button type="submit">Update</button>
+                <!--<button type="submit" name="delete">Delete</button>-->
+            </td>
+        </form>
+    </tr>
+    {% endfor %}
+</table>
+
+<hr>
+<!--   ADD PRODUCT
+<h3>Add / Restore Service</h3>
+
+<form method="post">
+    {% csrf_token %}
+
+    <label>Service:</label>
+    <select name="service_name" required>
+        <option value="Handling In">Handling In</option>
+        <option value="Handling Out">Handling Out</option>
+        <option value="Storage Fee">Storage Fee</option>
+    </select>
+
+    <label>Price:</label>
+    <input type="number" step="0.01" name="price" required>
+
+    <button type="submit">Save</button>
+</form>
+-->
+
+{% endblock %}

@@ -1,0 +1,76 @@
+html {
+  scroll-behavior: smooth;
+}
+
+/*default font*/
+.comfortaa-font {
+  font-family: "Comfortaa", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+#scrl_lck{
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* Default navbar */
+.navbar {
+  transition: all 0.3s ease;
+  padding: 20px;
+}
+
+/* When scrolled */
+.navbar.scrolled {
+  background-color: #ffffff !important;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 8px;
+}
+
+.navbar-brand #navbar_logo {
+    height: 40px !important;
+    width: auto;
+}
+
+.carousel-item {
+  height: 100vh;
+  background: #000; /* optional for empty space */
+}
+
+.carousel-item img {
+  width: 100%;
+  height: 100%;      /* pick a height you like */
+  object-fit: cover;  /* crops images nicely */
+}
+
+.scroll-container {
+  height: 100vh;
+  position: relative;
+}
+
+.section {
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.sec1{
+    background-image: url("/static/resource/header.avif");
+    background-size: cover;
+    background-position: center 70%;
+    background-repeat: no-repeat;
+    color: #ffffff;
+}
+
+#sec1-title{
+    font-size: 100px;
+    font-weight: bold;
+    padding-top: 150px;
+    padding-left: 80px;
+}
+
+#sec1-p{
+    padding-left: 80px;
+}

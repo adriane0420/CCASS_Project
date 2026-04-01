@@ -1,0 +1,47 @@
+{% extends "homepage/base.html" %}
+
+{% block content %}
+<h2>Pallet Transaction</h2>
+
+<p><strong>Current Pallet Balance:</strong> 
+   <span id="current-balance">{{ total_pallets }}</span>
+</p>
+
+<form method="POST" id="pallet-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+document.getElementById("pallet-form").addEventListener("submit", function (e) {
+    const balance = parseInt(
+        document.getElementById("current-balance").innerText
+    );
+
+    const transactionType = document.querySelector(
+        'select[name="transaction_type"]'
+    ).value;
+
+    const palletInput = document.querySelector(
+        'input[name="pallet_count"]'
+    );
+
+    const palletCount = parseInt(palletInput.value);
+
+    if (
+        transactionType === "withdraw" &&
+        palletCount > balance
+    ) {
+        e.preventDefault();
+        alert(
+            `Insufficient pallets.\n\n` +
+            `Available: ${balance}\n` +
+            `Requested: ${palletCount}`
+        );
+    }
+});
+</script>
+
+<a href="{% url 'client_dashboard' %}">Back to Dashboard</a>
+{% endblock %}
